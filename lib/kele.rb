@@ -12,6 +12,7 @@ class Kele
     @auth_token = response["auth_token"]
   end
 
+# my id = 25247
   def get_me
     response = self.class.get("https://www.bloc.io/api/v1/users/me", headers: { "authorization" => @auth_token })
     body = JSON.parse(response.body)
@@ -28,4 +29,32 @@ class Kele
     end
     puts available
   end
+
+  # def get_messages(page)
+  #   response = self.class.get("https://www.bloc.io/api/v1/message_threads", body: { "page" => page }, headers: { "authorization" => @auth_token })
+  #   body = JSON.parse(response.body)
+  # end
+
+  def get_messages(page = 'all')
+    if page == 'all'
+      response = self.class.get("https://www.bloc.io/api/v1/messages_threads", headers: { "authorization" => @auth_token })
+    else
+      response = self.class.get("https://www.bloc.io/api/v1/message_threads?page=#{page}", headers: { "authorization" => @auth_token })
+    end
+    @messages = JSON.parse(response.body)
+  end
+
+  # def create_message(sender, recipient_id, token, subject, stripped_text)
+  #   response = self.class.post("https://www.bloc.io/api/v1/messages", body: { "sender" => sender, "recipient_id" => recipient_id, "token" => token, "subject" => subject, "stripped-text" => stripped_text })
+  #   body = JSON.parse(response.body)
+  # end
+
+  def create_message(sender_email, recipient_id, subject, stripped_text)
+    response = self.class.post("https://www.bloc.io/api/v1/messages", headers: { "authorization" => @auth_token }, body: { sender: sender_email, recipient_id: recipient_id, subject: subject, stripped_text: stripped_text })
+    response.success? puts "message sent!"
+  end
+
 end
+
+
+
