@@ -44,14 +44,15 @@ class Kele
     @messages = JSON.parse(response.body)
   end
 
-  # def create_message(sender, recipient_id, token, subject, stripped_text)
-  #   response = self.class.post("https://www.bloc.io/api/v1/messages", body: { "sender" => sender, "recipient_id" => recipient_id, "token" => token, "subject" => subject, "stripped-text" => stripped_text })
-  #   body = JSON.parse(response.body)
-  # end
-
-  def create_message(sender_email, recipient_id, subject, stripped_text)
-    response = self.class.post("https://www.bloc.io/api/v1/messages", headers: { "authorization" => @auth_token }, body: { sender: sender_email, recipient_id: recipient_id, subject: subject, stripped_text: stripped_text })
-    response.success? puts "message sent!"
+  def create_message(sender, recipient_id, token, subject, stripped_text)
+    response = self.class.post("https://www.bloc.io/api/v1/messages",
+      body: { sender: sender,
+        recipient_id: recipient_id, 
+        token: token, 
+        subject: subject, 
+        stripped_text: stripped_text },
+    headers: { "authorization" => @auth_token })
+    # response.success? puts "message was sent!"
   end
 
 end
