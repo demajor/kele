@@ -1,6 +1,6 @@
 require 'httparty'
 require 'json'
-require './lib/roadmap'
+require 'kele/roadmap'
 
 class Kele
   include HTTParty
@@ -30,30 +30,20 @@ class Kele
     puts available
   end
 
-  # def get_messages(page)
-  #   response = self.class.get("https://www.bloc.io/api/v1/message_threads", body: { "page" => page }, headers: { "authorization" => @auth_token })
-  #   body = JSON.parse(response.body)
-  # end
-
-  def get_messages(page = 'all')
-    if page == 'all'
-      response = self.class.get("https://www.bloc.io/api/v1/messages_threads", headers: { "authorization" => @auth_token })
-    else
-      response = self.class.get("https://www.bloc.io/api/v1/message_threads?page=#{page}", headers: { "authorization" => @auth_token })
-    end
-    @messages = JSON.parse(response.body)
+  def get_messages(page)
+    response = self.class.get("https://www.bloc.io/api/v1/message_threads", body: { "page" => page }, headers: { "authorization" => @auth_token })
+    body = JSON.parse(response.body)
   end
 
-  def create_message(sender, recipient_id, token, subject, stripped_text)
+  def create_message(sender, recipient_id, subject, stripped_text)
     response = self.class.post("https://www.bloc.io/api/v1/messages",
-      body: { sender: sender,
-        recipient_id: recipient_id, 
-        token: token, 
-        subject: subject, 
-        stripped_text: stripped_text },
-    headers: { "authorization" => @auth_token })
-    # response.success? puts "message was sent!"
+      { body: { sender: sender, recipient_id: recipient_id, subject: subject, "stripped-text" => stripped_text }, headers: { "authorization" => @auth_token }})
   end
+
+  # def create_message(sender, recipient_id, subject, stripped_text)
+  #   values_headers = { body: { sender: sender, recipient_id: recipient_id, subject: subject, "stripped-text" => stripped_text}, headers: { authorization: @auth_token } }
+  #   response = self.class.post("https://www.bloc.io/api/v1/messages", values_headers)
+  # end
 
 end
 
