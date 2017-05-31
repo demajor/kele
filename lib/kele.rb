@@ -45,15 +45,9 @@ class Kele
   #   response = self.class.post("https://www.bloc.io/api/v1/messages", values_headers)
   # end
 
-  def create_submission(checkpoint_id, assignment_branch, assignment_commit_link, comment)
+  def create_submission(checkpoint_id, assignment_branch, assignment_commit_link, comment, enrollment_id)
     response = self.class.post("https://www.bloc.io/api/v1/checkpoint_submissions", 
-    { body: { enrollment_id: user_enrollment_id, checkpoint_id: checkpoint_id, assignment_branch: assignment_branch, assignment_commit_link: assignment_commit_link, comment: comment }, headers: { "authorization" => @auth_token }})
-  end
-
-  private
-
-  def user_enrollment_id
-    @user['current_enrollment']['id']
+    { body: { checkpoint_id: checkpoint_id, assignment_branch: assignment_branch, assignment_commit_link: assignment_commit_link, comment: comment, enrollment: enrollment_id }, headers: { "authorization" => @auth_token }})
   end
 
 end
